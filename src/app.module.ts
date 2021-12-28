@@ -3,6 +3,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './modules/users/users.module';
+import { CollectionsModule } from './modules/collections/collections.module';
+import { PlacesModule } from './modules/places/places.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { AppService } from './app.service';
       //definition: {path: join(process.cwd(), 'src/graphql.ts'), outputAs: 'class',} (추후 알아보기). SDL 파일을 TypeScript 파일로 자동으로 매핑해서 생성해주는 옵션(경로는 해당 파일이 저장될 위치)
       //outputAs는 매핑 파일이 클래스로 생성되게 하는 옵션(기본적으로는 interface로 생성됨)
     }),
+    UsersModule,
+    CollectionsModule,
+    PlacesModule,
 
     //async configuration도 알아보기(forRootAsync)
   ],
