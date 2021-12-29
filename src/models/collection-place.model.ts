@@ -7,9 +7,9 @@ export class CollectionPlace {
   @Field((type) => Int)
   id: number;
 
-  @Field((type) => [Collection])
-  collections: Collection[];
+  @Field((type) => Collection)
+  collection: Collection;
 
-  @Field((type) => [Place])
-  places: Place[];
+  @Field((type) => Place)
+  place: Place;
 }
