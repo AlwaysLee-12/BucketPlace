@@ -15,6 +15,6 @@ export class PlaceResolver {
 
   @Query((returns) => Place, { name: 'place' })
   async getPlace(@Args('id', { type: () => Int }) id: number) {
-    return this.placeService.findOneById(id);
+    return this.placeService.getPlace({ id });
   }
 }

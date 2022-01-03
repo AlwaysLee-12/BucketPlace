@@ -8,6 +8,6 @@ export class CollectionResolver {
 
   @Query((returns) => Collection, { name: 'collection' })
   async getCollection(@Args('id', { type: () => Int }) id: number) {
-    return this.collectionService.findOneById(id);
+    return this.collectionService.getCollection({ id });
   }
 }
