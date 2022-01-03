@@ -30,7 +30,6 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     CollectionsModule,
     PlacesModule,
-
     //async configuration도 알아보기(forRootAsync)
   ],
   controllers: [AppController],
