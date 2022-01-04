@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { CollectionsModule } from './modules/collections/collections.module';
 import { PlacesModule } from './modules/places/places.module';
 import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -23,9 +24,10 @@ import { ConfigModule } from '@nestjs/config';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env', //기본적으로 configmodule은 루트 디렉터리에서 .env 파일을 찾지만, 찾을 다른 경로를 지정하고 싶으면 이 옵션을 사용하면 됨
+      //envFilePath: process.env.NODE_ENV === 'production' ? '.env.prod' : '.env', //기본적으로 configmodule은 루트 디렉터리에서 .env 파일을 찾지만, 찾을 다른 경로를 지정하고 싶으면 이 옵션을 사용하면 됨
       //여러 경로를 지정할 때는 ['',''] 이런식으로 하면됨. 지정된 파일이 여러개 발견되면, 첫 번째 파일 우선
       cache: true, //process.env에 대한 엑세스 속도가 느릴 수 있기 때문에 cache 속성을 설정해 성능을 높임
+      load: [configuration],
     }),
     UsersModule,
     CollectionsModule,
