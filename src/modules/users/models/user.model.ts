@@ -1,13 +1,13 @@
 //코드 우선 접근 방식. TypeScript Decorator를 사용해 SDL 생성
 //@nestjs/graphql 패키지가 데코레이터를 통해 정의된 메타 데이터를 읽고 자동으로 스키마를 생성함
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Collection } from './collection.model';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Collection } from '../../collections/models/collection.model';
 
 @ObjectType({ description: 'User model' })
 export class User {
   //@Field 데코레이터를 명시함으로써 해당 부분이 필드에 해당하는 것이고, 해당 필드의 타입 및 옵션과 같은 메타 데이터를 인식할 수 있게 함
-  @Field((type) => Int)
-  id: number;
+  @Field(() => ID)
+  id: string;
 
   @Field()
   name: string;
@@ -24,8 +24,8 @@ export class User {
   @Field({ nullable: true, description: '남 or 여 중 선택' })
   sex?: string;
 
-  @Field((type) => Collection)
-  collection: Collection;
+  @Field(() => Collection, { nullable: true })
+  collection?: Collection;
 }
 
 //위 ObjectType은
