@@ -8,7 +8,10 @@ import {
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
   constructor() {
     super({
       log: [
@@ -25,8 +28,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$connect();
   }
 
-  async OnModuleDestroy(): Promise<void> {
-    await this.$disconnect();
+  async onModuleDestroy(): Promise<void> {
+    this.$disconnect();
   }
 
   async enableShutdownHooks(app: INestApplication) {
