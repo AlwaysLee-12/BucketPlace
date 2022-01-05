@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Collection } from '../modules/collections/models/collection.model';
-import { Place } from '../modules/places/models/place.model';
+import { Collection } from './collection.model';
+import { Place } from '../../places/models/place.model';
 
 @ObjectType()
 export class CollectionPlace {
