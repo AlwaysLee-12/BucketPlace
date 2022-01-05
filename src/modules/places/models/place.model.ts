@@ -6,10 +6,10 @@ export class Place {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
-  @Field()
+  @Field(() => String)
   location: string;
 
   // @Field()
