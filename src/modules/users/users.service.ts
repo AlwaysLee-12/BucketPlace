@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './models/user.model';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpsertUserInput } from './dto/upsert-user.input';
+import { UpdateUserArgs } from './dto/update-user.args';
 
 @Injectable()
 export class UsersService {
@@ -27,13 +28,20 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: string, data: UpsertUserInput): Promise<User> {
+  async updateUser(args: UpdateUserArgs): Promise<User> {
+    const { userId, updateUserData } = args;
+    const { address, age, name, phone_number, sex } = updateUserData;
+
     return await this.prisma.user.update({
       where: {
         id: userId,
       },
       data: {
-        ...data,
+        address: address,
+        age: age,
+        name: name,
+        phone_number: phone_number,
+        sex: sex,
       },
     });
   }
