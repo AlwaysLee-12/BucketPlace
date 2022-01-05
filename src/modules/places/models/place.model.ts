@@ -16,5 +16,5 @@ export class Place {
   // image_URL: string;
 
   @Field(() => User) //[[User]]는 유저 배열
-  user: User;
+  user?: User;
 }
