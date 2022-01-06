@@ -55,7 +55,7 @@ async function main() {
     where: { id: '1' },
     update: {},
     create: {
-      userId: '1',
+      userId: kim.id,
     },
   });
 
@@ -63,7 +63,7 @@ async function main() {
     where: { id: '2' },
     update: {},
     create: {
-      userId: '2',
+      userId: lee.id,
     },
   });
 
@@ -71,7 +71,7 @@ async function main() {
     where: { id: '3' },
     update: {},
     create: {
-      userId: '3',
+      userId: park.id,
     },
   });
 
@@ -79,7 +79,7 @@ async function main() {
     where: { id: '4' },
     update: {},
     create: {
-      userId: '4',
+      userId: choi.id,
     },
   });
 
@@ -89,7 +89,7 @@ async function main() {
     create: {
       name: '애버랜드',
       location: '경기 용인시 처인구 포곡읍 애버랜드로 199',
-      userId: '1',
+      userId: kim.id,
     },
   });
 
@@ -99,7 +99,7 @@ async function main() {
     create: {
       name: '롯데월드',
       location: '서울 송파구 올림픽로 240',
-      userId: '2',
+      userId: lee.id,
     },
   });
 
@@ -109,7 +109,7 @@ async function main() {
     create: {
       name: '영일분식',
       location: '서울 영등포구 도림로141가길 34-1',
-      userId: '3',
+      userId: park.id,
     },
   });
 
@@ -119,7 +119,7 @@ async function main() {
     create: {
       name: '시간을 들이다',
       location: '서울 영등포구 선유서로24길 6 영등포 중흥S-CLASS 1층 115호',
-      userId: '4',
+      userId: choi.id,
     },
   });
 
@@ -127,8 +127,8 @@ async function main() {
     where: { id: '1' },
     update: {},
     create: {
-      collectionId: '1',
-      placeId: '1',
+      collectionId: kimCollection.id,
+      placeId: kimPostPlace.id,
     },
   });
 
@@ -136,8 +136,8 @@ async function main() {
     where: { id: '2' },
     update: {},
     create: {
-      collectionId: '2',
-      placeId: '2',
+      collectionId: leeCollection.id,
+      placeId: leePostPlace.id,
     },
   });
 
@@ -145,8 +145,8 @@ async function main() {
     where: { id: '3' },
     update: {},
     create: {
-      collectionId: '3',
-      placeId: '3',
+      collectionId: parkCollection.id,
+      placeId: parkPostPlace.id,
     },
   });
 
@@ -154,8 +154,8 @@ async function main() {
     where: { id: '4' },
     update: {},
     create: {
-      collectionId: '4',
-      placeId: '4',
+      collectionId: choiCollection.id,
+      placeId: choiPostPlace.id,
     },
   });
 

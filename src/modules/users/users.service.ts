@@ -46,11 +46,41 @@ export class UsersService {
     });
   }
 
-  async deleteUser(userId: string): Promise<User> {
-    return await this.prisma.user.delete({
-      where: {
-        id: userId,
-      },
-    });
+  async deleteUser(userId: string): Promise<Boolean> {
+    try {
+      const collection = await this.prisma.collection.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+      const deleteCollectionPlacesQuery =
+        this.prisma.collectionPlace.deleteMany({
+          where: {
+            collectionId: collection.id,
+          },
+        });
+      const deleteCollectionQuery = this.prisma.collection.delete({
+        where: {
+          userId: userId,
+        },
+      });
+      const deleteUserQuery = this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+
+      await this.prisma.$transaction([
+        deleteCollectionPlacesQuery,
+        deleteCollectionQuery,
+        deleteUserQuery,
+      ]);
+    } catch (err) {
+      //에러 처리 나중에 다시
+      console.log(err);
+      return false;
+    }
+
+    return true;
   }
 }
