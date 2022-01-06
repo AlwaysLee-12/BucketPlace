@@ -1,11 +1,14 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from '../../users/models/user.model';
+import { Collection } from '.prisma/client';
+import { UserModel } from '../../users/models/user.model';
 
 @ObjectType()
-export class Collection {
+export class CollectionModel implements Collection {
   @Field(() => ID)
   id: string;
 
-  @Field(() => User)
-  user: User;
+  @Field(() => UserModel)
+  user: UserModel;
+
+  userId: string;
 }

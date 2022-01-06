@@ -1,15 +1,20 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Collection } from './collection.model';
-import { Place } from '../../places/models/place.model';
+import { CollectionModel } from './collection.model';
+import { PlaceModel } from '../../places/models/place.model';
+
+import { CollectionPlace } from '.prisma/client';
 
 @ObjectType()
-export class CollectionPlace {
+export class CollectionPlaceModel implements CollectionPlace {
   @Field((type) => ID)
   id: string;
 
-  @Field((type) => Collection)
-  collection: Collection;
+  @Field((type) => CollectionModel)
+  collection: CollectionModel;
 
-  @Field((type) => Place)
-  place: Place;
+  @Field((type) => PlaceModel)
+  place: PlaceModel;
+
+  collectionId: string;
+  placeId: string;
 }

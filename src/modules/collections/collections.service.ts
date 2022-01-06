@@ -1,39 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { Collection, CollectionPlace, Prisma } from '@prisma/client';
+import { CollectionPlace } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { DeletePlaceFromCollectionArgs } from './dto/delete-place-from-collection.args';
 
 @Injectable()
 export class CollectionsService {
   constructor(private prisma: PrismaService) {}
 
-  async getCollection(
-    collectionWhereUniqueInput: Prisma.CollectionWhereUniqueInput,
-  ): Promise<Collection | null> {
-    return await this.prisma.collection.findUnique({
-      where: collectionWhereUniqueInput,
+  async getCollection(collectionId: string): Promise<CollectionPlace[]> {
+    return await this.prisma.collectionPlace.findMany({
+      where: {
+        collectionId: collectionId,
+      },
     });
   }
 
-  async deleteCollection(userId: string): Promise<any> {
-    const collection: Collection = await this.prisma.collection.findUnique({
-      where: {
-        userId: userId,
-      },
-    });
-    const deleteCollectionPlaces = this.prisma.collectionPlace.deleteMany({
-      where: {
-        collectionId: collection.id,
-      },
-    });
-    const deleteCollection = this.prisma.collection.delete({
-      where: {
-        userId: userId,
-      },
-    });
-
-    return await this.prisma.$transaction([
-      deleteCollectionPlaces,
-      deleteCollection,
-    ]);
-  }
+  // async deletePlaceFromCollection(
+  //   args: DeletePlaceFromCollectionArgs,
+  // ): Promise<boolean> {
+  //   const { collectionId, placeId } = args;
+  //   try {
+  //     await this.prisma.collectionPlace.delete({
+  //       where: {
+  //         collectionId: collectionId,
+  //         placeId: placeId,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //     return false;
+  //   }
+  //   return true;
+  // }
 }
