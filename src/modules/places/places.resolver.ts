@@ -24,4 +24,9 @@ export class PlaceResolver {
   async postPlace(@Args() args: PostPlaceArgs) {
     return this.placeService.postPlace(args);
   }
+
+  @Mutation(() => Boolean, { name: 'deletePlace' })
+  async deletePlace(@Args('id') id: string) {
+    return this.placeService.deletePlace(id);
+  }
 }

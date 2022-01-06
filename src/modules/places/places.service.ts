@@ -29,4 +29,30 @@ export class PlacesService {
       },
     });
   }
+
+  async deletePlace(placeId: string): Promise<boolean> {
+    try {
+      const deleteCollectionPlaceQuery = this.prisma.collectionPlace.deleteMany(
+        {
+          where: {
+            placeId: placeId,
+          },
+        },
+      );
+      const deletePlaceQuery = this.prisma.place.delete({
+        where: {
+          id: placeId,
+        },
+      });
+
+      await this.prisma.$transaction([
+        deleteCollectionPlaceQuery,
+        deletePlaceQuery,
+      ]);
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+    return true;
+  }
 }
