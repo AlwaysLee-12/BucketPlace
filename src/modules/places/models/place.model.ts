@@ -1,8 +1,9 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { User } from '../../users/models/user.model';
+import { Place } from '.prisma/client';
+import { UserModel } from '../../users/models/user.model';
 
 @ObjectType()
-export class Place {
+export class PlaceModel implements Place {
   @Field(() => ID)
   id: string;
 
@@ -15,6 +16,8 @@ export class Place {
   // @Field()
   // image_URL: string;
 
-  @Field(() => User) //[[User]]는 유저 배열
-  user?: User;
+  @Field(() => UserModel) //[[User]]는 유저 배열
+  user?: UserModel;
+
+  userId: string;
 }
