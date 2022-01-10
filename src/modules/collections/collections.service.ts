@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CollectionPlaceModel } from './models/collection-place.model';
-import { DeletePlaceFromCollectionArgs } from './dto/delete-place-from-collection.args';
+import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
+import { PlaceModel } from '../places/models/place.model';
 
 @Injectable()
 export class CollectionsService {
@@ -19,8 +20,42 @@ export class CollectionsService {
     });
   }
 
+  async addPlaceToCollection(
+    args: AddAndDeletePlaceFromCollectionArgs,
+  ): Promise<CollectionPlaceModel | null> {
+    const { collectionId, placeId } = args;
+
+    const collectionPlace: CollectionPlaceModel =
+      await this.prisma.collectionPlace.findFirst({
+        where: {
+          collectionId: collectionId,
+          placeId: placeId,
+        },
+        include: {
+          collection: true,
+          place: true,
+        },
+      });
+
+    if (collectionPlace) {
+      //에러 코드 수정
+      throw new NotFoundException('Place Already Exist In Collection');
+    } else {
+      return await this.prisma.collectionPlace.create({
+        data: {
+          collectionId: collectionId,
+          placeId: placeId,
+        },
+        include: {
+          collection: true,
+          place: true,
+        },
+      });
+    }
+  }
+
   // async deletePlaceFromCollection(
-  //   args: DeletePlaceFromCollectionArgs,
+  //   args: AddAndDeletePlaceFromCollectionArgs,
   // ): Promise<boolean> {
   //   const { collectionId, placeId } = args;
   //   try {

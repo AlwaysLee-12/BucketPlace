@@ -7,7 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { CollectionsService } from './collections.service';
-import { DeletePlaceFromCollectionArgs } from './dto/delete-place-from-collection.args';
+import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
 import { CollectionPlaceModel } from './models/collection-place.model';
 import { CollectionModel } from './models/collection.model';
 
@@ -20,8 +20,15 @@ export class CollectionResolver {
     return this.collectionService.getCollection(id);
   }
 
+  @Mutation(() => CollectionPlaceModel, { name: 'addPlaceToCollection' })
+  async addPlaceToCollection(
+    @Args() args: AddAndDeletePlaceFromCollectionArgs,
+  ) {
+    return this.collectionService.addPlaceToCollection(args);
+  }
+
   // @Mutation(() => Boolean, { name: 'deletePlaceFromCollection' })
-  // async deletePlaceFromCollection(@Args() args: DeletePlaceFromCollectionArgs) {
+  // async deletePlaceFromCollection(@Args() args: AddAndDeletePlaceFromCollectionArgs) {
   //   return this.collectionService.deletePlaceFromCollection(args);
   // }
 }
