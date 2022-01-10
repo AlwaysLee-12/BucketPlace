@@ -27,8 +27,10 @@ export class CollectionResolver {
     return this.collectionService.addPlaceToCollection(args);
   }
 
-  // @Mutation(() => Boolean, { name: 'deletePlaceFromCollection' })
-  // async deletePlaceFromCollection(@Args() args: AddAndDeletePlaceFromCollectionArgs) {
-  //   return this.collectionService.deletePlaceFromCollection(args);
-  // }
+  @Mutation(() => Boolean, { name: 'deletePlaceFromCollection' })
+  async deletePlaceFromCollection(
+    @Args() args: AddAndDeletePlaceFromCollectionArgs,
+  ) {
+    return this.collectionService.deletePlaceFromCollection(args);
+  }
 }

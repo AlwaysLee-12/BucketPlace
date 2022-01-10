@@ -54,21 +54,27 @@ export class CollectionsService {
     }
   }
 
-  // async deletePlaceFromCollection(
-  //   args: AddAndDeletePlaceFromCollectionArgs,
-  // ): Promise<boolean> {
-  //   const { collectionId, placeId } = args;
-  //   try {
-  //     await this.prisma.collectionPlace.delete({
-  //       where: {
-  //         collectionId: collectionId,
-  //         placeId: placeId,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  async deletePlaceFromCollection(
+    args: AddAndDeletePlaceFromCollectionArgs,
+  ): Promise<boolean> {
+    const { collectionId, placeId } = args;
+    const collectionPlace = await this.prisma.collectionPlace.findFirst({
+      where: {
+        collectionId: collectionId,
+        placeId: placeId,
+      },
+    });
+
+    try {
+      await this.prisma.collectionPlace.delete({
+        where: {
+          id: collectionPlace.id,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+    return true;
+  }
 }
