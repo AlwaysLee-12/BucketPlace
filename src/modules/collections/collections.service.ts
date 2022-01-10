@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { CollectionPlace } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { CollectionPlaceModel } from './models/collection-place.model';
 import { DeletePlaceFromCollectionArgs } from './dto/delete-place-from-collection.args';
 
 @Injectable()
 export class CollectionsService {
   constructor(private prisma: PrismaService) {}
 
-  async getCollection(collectionId: string): Promise<CollectionPlace[]> {
+  async getCollection(collectionId: string): Promise<CollectionPlaceModel[]> {
     return await this.prisma.collectionPlace.findMany({
       where: {
         collectionId: collectionId,
+      },
+      include: {
+        place: true,
+        collection: true,
       },
     });
   }

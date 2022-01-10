@@ -15,7 +15,7 @@ import { CollectionModel } from './models/collection.model';
 export class CollectionResolver {
   constructor(private readonly collectionService: CollectionsService) {}
 
-  @Query(() => CollectionPlaceModel, { name: 'collection' })
+  @Query(() => [CollectionPlaceModel], { name: 'collection' })
   async getCollection(@Args('id', { type: () => String }) id: string) {
     return this.collectionService.getCollection(id);
   }
