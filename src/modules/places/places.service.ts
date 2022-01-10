@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PostPlaceArgs } from './dto/post-place.args';
 import { PostPlaceInput } from './dto/post-place.input';
-import { Place } from './models/place.model';
+import { PlaceModel } from './models/place.model';
 
 @Injectable()
 export class PlacesService {
   constructor(private prisma: PrismaService) {}
 
-  async getPlace(placeId: string): Promise<Place | null> {
+  async getPlace(placeId: string): Promise<PlaceModel | null> {
     return this.prisma.place.findUnique({
       where: { id: placeId },
       include: {
@@ -17,7 +17,7 @@ export class PlacesService {
     });
   }
 
-  async postPlace(args: PostPlaceArgs): Promise<Place> {
+  async postPlace(args: PostPlaceArgs): Promise<PlaceModel> {
     const { userId, postData } = args;
     const { name, location } = postData;
 
