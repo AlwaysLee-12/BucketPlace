@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { GetPlacesArgs } from './dto/get-places.args';
 import { PostPlaceArgs } from './dto/post-place.args';
 import { PostPlaceInput } from './dto/post-place.input';
 import { PlaceModel } from './models/place.model';
@@ -9,12 +10,18 @@ export class PlacesService {
   constructor(private prisma: PrismaService) {}
 
   async getPlace(placeId: string): Promise<PlaceModel | null> {
-    return this.prisma.place.findUnique({
+    return await this.prisma.place.findUnique({
       where: { id: placeId },
       include: {
         user: true,
       },
     });
+  }
+
+  async getPlaces(args: GetPlacesArgs): Promise<PlaceModel[]> {
+    const { skip, take } = args;
+
+    return await this.prisma.place.findMany({ skip, take });
   }
 
   async postPlace(args: PostPlaceArgs): Promise<PlaceModel> {

@@ -8,6 +8,7 @@ import {
   Mutation,
 } from '@nestjs/graphql';
 import { PlaceModel } from 'src/modules/places/models/place.model';
+import { GetPlacesArgs } from './dto/get-places.args';
 import { PostPlaceArgs } from './dto/post-place.args';
 import { PlacesService } from './places.service';
 
@@ -18,6 +19,11 @@ export class PlaceResolver {
   @Query(() => PlaceModel, { name: 'place' })
   async getPlace(@Args('id', { type: () => String }) id: string) {
     return this.placeService.getPlace(id);
+  }
+
+  @Query(() => [PlaceModel], { name: 'places' })
+  async getPlaces(@Args() args: GetPlacesArgs) {
+    return this.placeService.getPlaces(args);
   }
 
   @Mutation(() => PlaceModel, { name: 'postPlace' })
