@@ -3,16 +3,23 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CollectionPlaceModel } from './models/collection-place.model';
 import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
 import { PlaceModel } from '../places/models/place.model';
+import { GetCollectionArgs } from './dto/get-collection.args';
 
 @Injectable()
 export class CollectionsService {
   constructor(private prisma: PrismaService) {}
 
-  async getCollection(collectionId: string): Promise<CollectionPlaceModel[]> {
+  async getCollection(
+    args: GetCollectionArgs,
+  ): Promise<CollectionPlaceModel[]> {
+    const { collectionId, skip, take } = args;
+
     return await this.prisma.collectionPlace.findMany({
       where: {
         collectionId: collectionId,
       },
+      skip: skip,
+      take: take,
       include: {
         place: true,
         collection: true,
