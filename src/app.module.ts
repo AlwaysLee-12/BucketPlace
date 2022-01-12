@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { CollectionsModule } from './collections/collections.module';
@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { UsersModule } from './users/users.module';
 import { PlacesModule } from './places/places.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -35,10 +37,16 @@ import { PlacesModule } from './places/places.module';
       //definition: {path: join(process.cwd(), 'src/graphql.ts'), outputAs: 'class',} (추후 알아보기). SDL 파일을 TypeScript 파일로 자동으로 매핑해서 생성해주는 옵션(경로는 해당 파일이 저장될 위치)
       //outputAs는 매핑 파일이 클래스로 생성되게 하는 옵션(기본적으로는 interface로 생성됨)
     }),
+    CommonModule,
     UsersModule,
     CollectionsModule,
     PlacesModule,
     //async configuration도 알아보기(forRootAsync)
   ],
 })
-export class AppModule {}
+// NestModule 클래스의 configure() 메서드를 이용한 미들웨어 등록(as global middleware)
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
