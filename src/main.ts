@@ -4,7 +4,9 @@ import { AppModule } from './app.module';
 import { PrismaService } from './prisma/prisma.service';
 
 declare const module: any;
-
+// https://github.com/nestjs/nest/issues/2249 폴더 구조 참고
+// modules안에 넣지 않는 이유는 interceptors, guards, pipes 등도 모듈로 분류되는데 이 경우 이런 것들이 모듈 modules라는 폴더로 들어가게 되게 때문
+// 결국, modules라는 폴더에 예상보다 많은 것들이 들어가 따로 modules라는 폴더명으로 분리한 이유가 없어짐(최악의 경우 모든 것이 modules로 들어갈수도...)
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 3000;
