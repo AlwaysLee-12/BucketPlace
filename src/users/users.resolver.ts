@@ -7,9 +7,9 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { UserModel } from 'src/modules/users/models/user.model';
 import { UpdateUserArgs } from './dto/update-user.args';
 import { UpsertUserInput } from './dto/upsert-user.input';
+import { UserModel } from './models/user.model';
 import { UsersService } from './users.service';
 
 @Resolver(() => UserModel)

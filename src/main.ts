@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaService } from './modules/prisma/prisma.service';
+import { PrismaService } from './prisma/prisma.service';
 
 declare const module: any;
 

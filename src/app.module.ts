@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './modules/users/users.module';
-import { CollectionsModule } from './modules/collections/collections.module';
-import { PlacesModule } from './modules/places/places.module';
+import { CollectionsModule } from './collections/collections.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { UsersModule } from './users/users.module';
+import { PlacesModule } from './places/places.module';
 
 @Module({
   imports: [
@@ -42,7 +40,5 @@ import configuration from './config/configuration';
     PlacesModule,
     //async configuration도 알아보기(forRootAsync)
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

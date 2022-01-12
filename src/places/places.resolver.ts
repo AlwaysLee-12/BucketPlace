@@ -7,9 +7,9 @@ import {
   Parent,
   Mutation,
 } from '@nestjs/graphql';
-import { PlaceModel } from 'src/modules/places/models/place.model';
 import { GetPlacesArgs } from './dto/get-places.args';
 import { PostPlaceArgs } from './dto/post-place.args';
+import { PlaceModel } from './models/place.model';
 import { PlacesService } from './places.service';
 
 @Resolver(() => PlaceModel)
