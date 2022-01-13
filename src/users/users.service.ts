@@ -3,18 +3,28 @@ import { UserModel } from './models/user.model';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpsertUserInput } from './dto/upsert-user.input';
 import { UpdateUserArgs } from './dto/update-user.args';
+import { Logger } from 'src/common/providers/logger.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
+  ) {
+    this.logger.setContext(UsersService.name);
+  }
 
   async getUser(userId: string): Promise<UserModel | null> {
+    this.logger.log('Get User By ID Service');
+
     return await this.prisma.user.findUnique({
       where: { id: userId },
     });
   }
 
   async createUser(data: UpsertUserInput): Promise<UserModel> {
+    this.logger.log('Create User Service');
+
     const user: UserModel = await this.prisma.user.create({
       data,
     });
@@ -29,6 +39,8 @@ export class UsersService {
   }
 
   async updateUser(args: UpdateUserArgs): Promise<UserModel> {
+    this.logger.log('Update User Service');
+
     const { userId, updateUserData } = args;
     const { address, age, name, phone_number, sex } = updateUserData;
 
@@ -47,6 +59,8 @@ export class UsersService {
   }
 
   async deleteUser(userId: string): Promise<Boolean> {
+    this.logger.log('Delete User Service');
+
     try {
       const collection = await this.prisma.collection.findUnique({
         where: {
