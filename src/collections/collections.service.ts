@@ -4,14 +4,19 @@ import { CollectionPlaceModel } from './models/collection-place.model';
 import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
 import { PlaceModel } from '../places/models/place.model';
 import { GetCollectionArgs } from './dto/get-collection.args';
+import { Logger } from 'src/common/providers/logger.service';
 
 @Injectable()
 export class CollectionsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private readonly logger: Logger) {
+    this.logger.setContext(CollectionsService.name);
+  }
 
   async getCollection(
     args: GetCollectionArgs,
   ): Promise<CollectionPlaceModel[]> {
+    this.logger.log('Get Collection Datas Service');
+
     const { collectionId, skip, take } = args;
 
     return await this.prisma.collectionPlace.findMany({
@@ -30,6 +35,8 @@ export class CollectionsService {
   async addPlaceToCollection(
     args: AddAndDeletePlaceFromCollectionArgs,
   ): Promise<CollectionPlaceModel | null> {
+    this.logger.log('Add Place To Collection Service');
+
     const { collectionId, placeId } = args;
 
     const collectionPlace: CollectionPlaceModel =
@@ -64,6 +71,8 @@ export class CollectionsService {
   async deletePlaceFromCollection(
     args: AddAndDeletePlaceFromCollectionArgs,
   ): Promise<boolean> {
+    this.logger.log('Delete Place From Collection Service');
+
     const { collectionId, placeId } = args;
     const collectionPlace = await this.prisma.collectionPlace.findFirst({
       where: {

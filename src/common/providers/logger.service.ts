@@ -1,60 +1,62 @@
-import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  ConsoleLoggerOptions,
+  Injectable,
+  Scope,
+} from '@nestjs/common';
+
 import { RequestContext } from './request-context.service';
 
-//왜 해당 서비스에서 독립적인 인스턴스를 갖는 Transient scope를 사용했는지
+/**
+ * https://docs.nestjs.com/techniques/logger
+ * To disable color in the default logger's messages, set the `NO_COLOR` environment variable to some non-empty string.
+ */
 @Injectable({ scope: Scope.TRANSIENT })
 export class Logger extends ConsoleLogger {
-  private isProduction: boolean = process.env.NODE_ENV === 'production';
+  protected isProduction: boolean = process.env.NODE_ENV === 'production';
+  protected override options: ConsoleLoggerOptions = {
+    logLevels: ['log', 'error', 'warn', 'debug', 'verbose'],
+    timestamp: !this.isProduction,
+  };
 
   constructor(private req: RequestContext, context: string) {
     super(context);
   }
 
-  log(message: unknown, context?: string): void {
-    this.isProduction
-      ? console.log(this.prodContext(context), message)
-      : super.log(message, this.devContext(context));
-  }
-
-  error(message: unknown, trace?: string, context?: string): void {
-    this.isProduction
-      ? console.error(this.prodContext(context), message, '\n', trace)
-      : super.error(message, trace, this.devContext(context));
-  }
-  //수정
-  reqContext(): any {
-    return this.req.context || '';
+  private get reqContext(): string {
+    return '';
     //return this.req.context?.id || '';
   }
 
-  getContext(context?: string): string {
-    return context || this.context || '';
+  public override log(message: unknown, ...optionalParams: unknown[]): void {
+    super.log(message, ...this.parseContext(optionalParams));
   }
 
-  prodContext(context?: string): string {
-    // dayjs().format('YYYY-MM-DD HH:mm:ss');
-    let prefix = new Date().toLocaleString();
+  public override warn(message: unknown, ...optionalParams: unknown[]): void {
+    super.warn(message, ...this.parseContext(optionalParams));
+  }
 
+  public override error(message: unknown, ...optionalParams: unknown[]): void {
+    super.error(message, ...this.parseContext(optionalParams));
+  }
+
+  protected override getTimestamp(): string {
+    // When you want to change or remove the date format
+    // return this.isProduction ? '' : super.getTimestamp();
+    return super.getTimestamp();
+  }
+
+  private parseContext(params: unknown[]): unknown[] {
     if (this.reqContext) {
-      prefix += ` [${this.reqContext}]`;
+      let context = this.reqContext;
+
+      if (this.context) {
+        context += `] [${this.context}`;
+      }
+
+      params.push(context);
     }
 
-    const ctx = this.getContext(context);
-    if (ctx) {
-      prefix += ` [${ctx}]`;
-    }
-
-    return prefix;
-  }
-
-  devContext(context?: string): string {
-    const prefix = [];
-
-    this.reqContext && prefix.push(this.reqContext);
-
-    const ctx = this.getContext(context);
-    ctx && prefix.push(ctx);
-
-    return prefix.join('] [');
+    return params;
   }
 }

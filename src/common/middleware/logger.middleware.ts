@@ -2,28 +2,37 @@
 // 서버에 대한 API 요청에 대한 정보를 기록
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import { nanoid } from 'nanoid';
 import { Logger } from '../providers/logger.service';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
+  private passUrl: string[] = ['/health', '/graphql'];
+  // GraphQL logging uses the apollo plugins.
+  // https://docs.nestjs.com/graphql/plugins
+  // https://www.apollographql.com/docs/apollo-server/integrations/plugins/
+  // https://github.com/nestjs/graphql/issues/923
+
   constructor(private readonly logger: Logger) {}
 
-  use(req: Request, res: Response, next: NextFunction): void {
-    const { ip, method, originalUrl } = req;
-    const userAgent = req.get('user-agent') || '';
+  public use(req: Request, res: Response, next: () => void): void {
+    if (this.passUrl.includes(req.originalUrl)) {
+      return next();
+    }
 
-    // 응답후에도 express 연결은 끊어지지 않으므로
-    // close(연결이 끊어졌을 때)보다 finish(응답완료)를 사용
-    res.on('finish', () => {
-      const { statusCode } = res;
-      const contentLength = res.get('content-length');
+    // graphql이나 health체크 url이 아닐 때
+    // req.id = req.header('X-Request-Id') || nanoid();
+    // res.setHeader('X-Request-Id', req.id);
 
-      this.logger.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
-      );
-    });
+    // const user = req.user?.userId || '';
+    // this.logger.log(
+    //   `${req.method} ${req.originalUrl} - ${req.ip.replace(
+    //     '::ffff:',
+    //     '',
+    //   )} ${user}`,
+    // );
 
-    next();
+    // return next();
   }
 }
