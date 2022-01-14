@@ -53,16 +53,22 @@ export class CollectionsService {
     if (collectionPlace) {
       throw new BadRequestException('Place Already Exist In Collection');
     } else {
-      return await this.prisma.collectionPlace.create({
-        data: {
-          collectionId: collectionId,
-          placeId: placeId,
-        },
-        include: {
-          collection: true,
-          place: true,
-        },
-      });
+      try {
+        return await this.prisma.collectionPlace.create({
+          data: {
+            collectionId: collectionId,
+            placeId: placeId,
+          },
+          include: {
+            collection: true,
+            place: true,
+          },
+        });
+      } catch (err) {
+        throw new BadRequestException(
+          'Invalid Input Of CollectionId or PlaceId',
+        );
+      }
     }
   }
 
