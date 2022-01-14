@@ -15,10 +15,22 @@ export class PrismaService
   constructor() {
     super({
       log: [
-        { emit: 'event', level: 'query' },
-        { emit: 'stdout', level: 'info' },
-        { emit: 'stdout', level: 'warn' },
-        { emit: 'stdout', level: 'error' },
+        {
+          emit: 'event',
+          level: 'query',
+        },
+        {
+          emit: 'stdout',
+          level: 'error',
+        },
+        {
+          emit: 'stdout',
+          level: 'info',
+        },
+        {
+          emit: 'stdout',
+          level: 'warn',
+        },
       ],
       errorFormat: 'colorless',
     });

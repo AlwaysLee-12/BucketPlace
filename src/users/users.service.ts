@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpsertUserInput } from './dto/upsert-user.input';
 import { UpdateUserArgs } from './dto/update-user.args';
 import { Logger } from 'src/common/providers/logger.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,11 @@ export class UsersService {
     private readonly logger: Logger,
   ) {
     this.logger.setContext(UsersService.name);
+    //https://stackoverflow.com/questions/67509194/logging-with-prisma-2-and-nestjs-dependency-injection-problem
+    prisma.$on<any>('query', (event: Prisma.QueryEvent) => {
+      console.log('Query: ' + event.query);
+      console.log('Duration: ' + event.duration + 'ms');
+    });
   }
 
   async getUser(userId: string): Promise<UserModel | null> {

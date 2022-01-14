@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { Logger } from 'src/common/providers/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetPlacesArgs } from './dto/get-places.args';
@@ -9,6 +10,11 @@ import { PlaceModel } from './models/place.model';
 export class PlacesService {
   constructor(private prisma: PrismaService, private readonly logger: Logger) {
     this.logger.setContext(PlacesService.name);
+
+    prisma.$on<any>('query', (event: Prisma.QueryEvent) => {
+      console.log('Query: ' + event.query);
+      console.log('Duration: ' + event.duration + 'ms');
+    });
   }
 
   async getPlace(placeId: string): Promise<PlaceModel | null> {

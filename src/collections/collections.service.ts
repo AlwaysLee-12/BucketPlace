@@ -4,11 +4,17 @@ import { CollectionPlaceModel } from './models/collection-place.model';
 import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
 import { GetCollectionArgs } from './dto/get-collection.args';
 import { Logger } from 'src/common/providers/logger.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CollectionsService {
   constructor(private prisma: PrismaService, private readonly logger: Logger) {
     this.logger.setContext(CollectionsService.name);
+
+    prisma.$on<any>('query', (event: Prisma.QueryEvent) => {
+      console.log('Query: ' + event.query);
+      console.log('Duration: ' + event.duration + 'ms');
+    });
   }
 
   async getCollection(
