@@ -1,8 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CollectionPlaceModel } from './models/collection-place.model';
 import { AddAndDeletePlaceFromCollectionArgs } from './dto/add-and-delete-place-from-collection.args';
-import { PlaceModel } from '../places/models/place.model';
 import { GetCollectionArgs } from './dto/get-collection.args';
 import { Logger } from 'src/common/providers/logger.service';
 
@@ -52,8 +51,7 @@ export class CollectionsService {
       });
 
     if (collectionPlace) {
-      //에러 코드 수정
-      throw new NotFoundException('Place Already Exist In Collection');
+      throw new BadRequestException('Place Already Exist In Collection');
     } else {
       return await this.prisma.collectionPlace.create({
         data: {
@@ -88,8 +86,7 @@ export class CollectionsService {
         },
       });
     } catch (err) {
-      console.log(err);
-      return false;
+      throw err;
     }
     return true;
   }

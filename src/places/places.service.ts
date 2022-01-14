@@ -3,7 +3,6 @@ import { Logger } from 'src/common/providers/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { GetPlacesArgs } from './dto/get-places.args';
 import { PostPlaceArgs } from './dto/post-place.args';
-import { PostPlaceInput } from './dto/post-place.input';
 import { PlaceModel } from './models/place.model';
 
 @Injectable()
@@ -68,8 +67,7 @@ export class PlacesService {
         deletePlaceQuery,
       ]);
     } catch (err) {
-      console.log(err);
-      return false;
+      throw err;
     }
     return true;
   }
