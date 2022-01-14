@@ -90,9 +90,7 @@ export class UsersService {
         deleteUserQuery,
       ]);
     } catch (err) {
-      //에러 처리 나중에 다시
-      console.log(err);
-      return false;
+      throw err;
     }
 
     return true;
