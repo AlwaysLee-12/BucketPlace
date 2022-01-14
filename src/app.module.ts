@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { PlacesModule } from './places/places.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { CommonModule } from './common/common.module';
+import { APP_FILTER } from '@nestjs/core';
+import { ExceptionsFilter } from './common/filters/exception.filter';
 
 @Module({
   imports: [
@@ -43,6 +45,7 @@ import { CommonModule } from './common/common.module';
     PlacesModule,
     //async configuration도 알아보기(forRootAsync)
   ],
+  providers: [{ provide: APP_FILTER, useClass: ExceptionsFilter }],
 })
 // NestModule 클래스의 configure() 메서드를 이용한 미들웨어 등록(as global middleware)
 export class AppModule implements NestModule {
