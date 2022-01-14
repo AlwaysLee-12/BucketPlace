@@ -1,173 +1,94 @@
-import { PrismaClient } from '@prisma/client';
+import {
+  Collection,
+  CollectionPlace,
+  Place,
+  Prisma,
+  PrismaClient,
+  User,
+} from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: [
+    {
+      emit: 'event',
+      level: 'query',
+    },
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'info',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },
+  ],
+});
+
+const userData: Prisma.UserCreateInput[] = Array(10)
+  .fill({})
+  .map((_: User, index: number) => ({
+    id: index.toString(),
+    name: `dummy${index}`,
+    age: 20,
+    address: '서울 특별시',
+    phone_number: '010-1234-5689',
+  }));
+
+const placeData: Prisma.PlaceCreateInput[] = Array(10)
+  .fill({})
+  .map((_: Place, index: number) => ({
+    id: index.toString(),
+    name: `dummyPlace${index}`,
+    location: '경기도',
+    userId: index.toString(),
+  }));
+
+const collectionData = Array(10)
+  .fill({})
+  .map((_: Collection, index: number) => ({
+    id: index.toString(),
+    userId: index.toString(),
+  }));
+
+const collectionPlaceData = Array(10)
+  .fill({})
+  .map((_: CollectionPlace, index: number) => ({
+    id: index.toString(),
+    placeId: index.toString(),
+    collectionId: index.toString(),
+  }));
 
 async function main() {
-  const kim = await prisma.user.upsert({
-    where: { id: '1' },
-    update: {},
-    create: {
-      name: 'kim',
-      age: 20,
-      address: 'Seoul',
-      phone_number: '010-1234-5678',
-      sex: 'man',
-    },
+  console.log('Seeding.....');
+  prisma.$on('query', (e) => {
+    console.log('Query: ' + e.query);
+    console.log('Duration: ' + e.duration + 'ms');
   });
-
-  const lee = await prisma.user.upsert({
-    where: { id: '2' },
-    update: {},
-    create: {
-      name: 'lee',
-      age: 21,
-      address: 'Busan',
-      phone_number: '010-1425-3669',
-      sex: 'woman',
-    },
-  });
-
-  const park = await prisma.user.upsert({
-    where: { id: '3' },
-    update: {},
-    create: {
-      name: 'park',
-      age: 23,
-      address: 'Incheon',
-      phone_number: '010-7485-8596',
-      sex: 'man',
-    },
-  });
-
-  const choi = await prisma.user.upsert({
-    where: { id: '4' },
-    update: {},
-    create: {
-      name: 'choi',
-      age: 23,
-      address: 'Daejeon',
-      phone_number: '010-4156-8974',
-      sex: 'woman',
-    },
-  });
-
-  const kimCollection = await prisma.collection.upsert({
-    where: { id: '1' },
-    update: {},
-    create: {
-      userId: kim.id,
-    },
-  });
-
-  const leeCollection = await prisma.collection.upsert({
-    where: { id: '2' },
-    update: {},
-    create: {
-      userId: lee.id,
-    },
-  });
-
-  const parkCollection = await prisma.collection.upsert({
-    where: { id: '3' },
-    update: {},
-    create: {
-      userId: park.id,
-    },
-  });
-
-  const choiCollection = await prisma.collection.upsert({
-    where: { id: '4' },
-    update: {},
-    create: {
-      userId: choi.id,
-    },
-  });
-
-  const kimPostPlace = await prisma.place.upsert({
-    where: { id: '1' },
-    update: {},
-    create: {
-      name: '애버랜드',
-      location: '경기 용인시 처인구 포곡읍 애버랜드로 199',
-      userId: kim.id,
-    },
-  });
-
-  const leePostPlace = await prisma.place.upsert({
-    where: { id: '2' },
-    update: {},
-    create: {
-      name: '롯데월드',
-      location: '서울 송파구 올림픽로 240',
-      userId: lee.id,
-    },
-  });
-
-  const parkPostPlace = await prisma.place.upsert({
-    where: { id: '3' },
-    update: {},
-    create: {
-      name: '영일분식',
-      location: '서울 영등포구 도림로141가길 34-1',
-      userId: park.id,
-    },
-  });
-
-  const choiPostPlace = await prisma.place.upsert({
-    where: { id: '4' },
-    update: {},
-    create: {
-      name: '시간을 들이다',
-      location: '서울 영등포구 선유서로24길 6 영등포 중흥S-CLASS 1층 115호',
-      userId: choi.id,
-    },
-  });
-
-  const kimCollectionPlace = await prisma.collectionPlace.upsert({
-    where: { id: '1' },
-    update: {},
-    create: {
-      collectionId: kimCollection.id,
-      placeId: kimPostPlace.id,
-    },
-  });
-
-  const leeCollectionPlace = await prisma.collectionPlace.upsert({
-    where: { id: '2' },
-    update: {},
-    create: {
-      collectionId: leeCollection.id,
-      placeId: leePostPlace.id,
-    },
-  });
-
-  const parkCollectionPlace = await prisma.collectionPlace.upsert({
-    where: { id: '3' },
-    update: {},
-    create: {
-      collectionId: parkCollection.id,
-      placeId: parkPostPlace.id,
-    },
-  });
-
-  const choiCollectionPlace = await prisma.collectionPlace.upsert({
-    where: { id: '4' },
-    update: {},
-    create: {
-      collectionId: choiCollection.id,
-      placeId: choiPostPlace.id,
-    },
-  });
-
-  console.log(await prisma.user.findMany());
-  console.log(await prisma.collection.findMany());
-  console.log(
-    await prisma.place.findFirst({
-      select: { user: true },
-      where: { userId: '1' },
-    }),
+  await Promise.all(
+    userData.map(async (data: Prisma.UserCreateInput) =>
+      prisma.user.create({ data: data }),
+    ),
   );
-  console.log(await prisma.collectionPlace.findMany());
+  await Promise.all(
+    placeData.map(async (data: Prisma.PlaceCreateInput) =>
+      prisma.place.create({ data: data }),
+    ),
+  );
+  await Promise.all(
+    collectionData.map(async (data) =>
+      prisma.collection.create({ data: data }),
+    ),
+  );
+  await Promise.all(
+    collectionPlaceData.map(async (data) =>
+      prisma.collectionPlace.create({ data: data }),
+    ),
+  );
+  console.log('Seeding Finished.......');
 }
 
 main()
